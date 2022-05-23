@@ -1,7 +1,8 @@
 """test Flask with this"""
 
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from forms import AddForm
+import requests
 
 app = Flask(__name__)
 
@@ -11,6 +12,7 @@ app.config['SECRET_KEY'] = 'TESTINGGG'
 @app.route('/')
 def home():
     return "Hello Worlds"
+
 
 @app.route('/form', methods=["GET", "POST"])
 def form():
@@ -25,3 +27,13 @@ def form():
 
     else:
         return render_template("index.html", form=form)
+
+
+@app.route('/req')
+def req():
+    resp = requests.get("https://api.scryfall.com/cards/random")
+
+    data = resp.json()
+
+    # using the APIs JSON data, return that to browser
+    return jsonify(data)

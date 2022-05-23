@@ -197,3 +197,52 @@ This is what `index.html` should contain
 Yay! WTForms is set up. Right now the values are from my last project, so we'll just update based on what input we need.
 
 ---
+
+### Creating the models
+
+Create `models.py` and add some boilerplate code
+```
+"""Models for TABLENAME app."""
+
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+
+
+class TABLENAME(db.Model):
+    """TABLENAME."""
+
+    __tablename__ = "TABLENAME"
+
+    id = db.Column(db.Integer,
+                   primary_key=True,
+                   autoincrement=True)
+
+    name = db.Column(db.String(150),
+                     nullable=False)
+
+    description = db.Column(db.String(300),
+                     nullable=False)
+```
+
+Revisit the schema
+![schema](./schema.png)
+
+COME BACK TO THIS AFTER FINALIZING SCHEMA
+
+---
+
+### External API Request
+`pip3 install requests`
+Add `jsonify` to imports
+
+```
+@app.route('/req')
+def req():
+    resp = requests.get("https://api.scryfall.com/cards/random")
+
+    data = resp.json()
+
+    # using the APIs JSON data, return that to browser
+    return jsonify(data)
+```
