@@ -71,6 +71,13 @@ def login():
     return render_template("login.html", form=form)
 
 
+@app.route('/logout')
+def logout():
+    session.pop('sessionUsername')
+    flash('Goodbye! Logging out now..')
+    return redirect('/')
+
+
 @app.route('/secret')
 def secret():
     if "sessionUsername" not in session:
