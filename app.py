@@ -42,7 +42,7 @@ def register():
 
         # redirect
         flash('Welcome! Successfully logged in')
-        return redirect('/secret')
+        return redirect(f'/dashboard/{username}')
 
     return render_template("register.html", form=form)
 
@@ -64,7 +64,7 @@ def login():
             # add user_id to session
             session['sessionUsername'] = user.username
 
-            return redirect('/secret')
+            return redirect(f'/dashboard/{username}')
         else:
             form.username.errors = ['Invalid username/password']
 
@@ -78,13 +78,14 @@ def logout():
     return redirect('/')
 
 
-@app.route('/secret')
-def secret():
+@app.route('/dashboard/<string:username>')
+def dashboard(username):
     if "sessionUsername" not in session:
         flash('Please login first!')
         return redirect('/')
 
-    return "You made it!"
+    user = User.query.filter_by(username=username).first()
+    return render_template("dashboard.html", user=user)
 
 
 
