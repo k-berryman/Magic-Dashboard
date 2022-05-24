@@ -198,40 +198,6 @@ Yay! WTForms is set up. Right now the values are from my last project, so we'll 
 
 ---
 
-### Creating the models
-
-Create `models.py` and add some boilerplate code
-```
-"""Models for TABLENAME app."""
-
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
-
-
-class TABLENAME(db.Model):
-    """TABLENAME."""
-
-    __tablename__ = "TABLENAME"
-
-    id = db.Column(db.Integer,
-                   primary_key=True,
-                   autoincrement=True)
-
-    name = db.Column(db.String(150),
-                     nullable=False)
-
-    description = db.Column(db.String(300),
-                     nullable=False)
-```
-
-Revisit the schema
-![schema](./schema.png)
-
-COME BACK TO THIS AFTER FINALIZING SCHEMA
-
----
-
 ### External API Request
 `pip3 install requests`
 Add `jsonify` to imports
@@ -245,4 +211,287 @@ def req():
 
     # using the APIs JSON data, return that to browser
     return jsonify(data)
+```
+
+---
+
+### Template Inheritance
+-   Make  `templates`  folder and  `base.html`  in there and add this boilerplate
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/lumen/bootstrap.css">
+</head>
+<body>
+  <div class="container">
+    {% block content %}
+    {% endblock %}
+  </div>
+</body>
+</html>
+```
+
+Create  `home.html`  with this boilerplate
+
+```
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Home Page</h1>
+<h2>Hello, user!</h2>
+
+{% endblock %}
+```
+
+In  `app.py`, import  `render_template`  and  `return render_template("home.html")`
+
+---
+
+### Creating Register Page
+In `forms.py`,
+```
+class RegisterForm(FlaskForm):
+    """Register Form"""
+
+    name = StringField("Name",
+        validators=[
+            InputRequired("Name can't be blank"),
+            Length(min=1, max=50, message="Name must be 50 characters or less")])
+
+    email = StringField("Email",
+        validators=[
+            InputRequired("Email can't be blank"),
+            Email("Please enter a valid email"),
+            Length(min=1, max=50, message="Email must be 50 characters or less")])
+
+    username = StringField("Username",
+        validators=[
+            InputRequired("Username can't be blank"),
+            Length(min=1, max=25, message="Username must be 25 characters or less")])
+
+    password = PasswordField("Password",
+        validators=[
+            InputRequired("Password can't be blank")])
+
+```
+
+Create view function in  `app.py`
+
+```
+@app.route('/register', methods=["GET", "POST"])
+def register():
+    form = RegisterForm()
+
+    # if it's a request with a valid CSRF Token
+    if form.validate_on_submit():
+        # retrieve data from form
+        name = form.name.data
+        email = form.email.data
+        username = form.username.data
+        password = form.password.data
+
+        # add to SQLAlchemy
+        #user = User(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
+        #db.session.add(user)
+        #db.session.commit()
+
+        # redirect
+        return redirect('/success')
+    return render_template("register.html", form=form)
+```
+
+---
+
+### Creating Login Page
+In `forms.py`,
+```
+class LoginForm(FlaskForm):
+    """Login Form"""
+
+    username = StringField("Username",
+        validators=[
+            InputRequired("Username can't be blank"),
+            Length(min=1, max=25, message="Username must be 25 characters or less")])
+
+    password = PasswordField("Password",
+        validators=[
+            InputRequired("Password can't be blank")])
+```
+Create view function in  `app.py`
+```
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+
+    # if it's a request with a valid CSRF Token
+    if form.validate_on_submit():
+        # retrieve data from form
+        username = form.username.data
+        password = form.password.data
+
+        # verification...?
+
+        # redirect
+        return redirect('/secret')
+
+    else:
+        return render_template("login.html", form=form)
+```
+
+---
+
+### Hashing and Login - Creating the models
+-   Create  `models.py`  and add some boilerplate code
+
+```
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+
+def connect_db(app):
+    """Connect to database."""
+    db.app = app db.init_app(app)
+
+class User(db.Model):
+    """User."""
+
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer,
+                   primary_key=True,
+                   autoincrement=True)
+
+    name = db.Column(db.String(150),
+                     nullable=False)
+
+    description = db.Column(db.String(300),
+                     nullable=False)
+
+```
+
+-   Update the data to match the given schema
+
+![schema](./schema.png)
+
+`pip3 install flask_sqlalchemy`
+`pip3 install flask_bcrypt`
+
+In `models.py`, `from flask_bcrypt import Bcrypt`
+In `app.py`,
+```
+from models import connect_db, db, User
+...
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///magicDB'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ECHO'] = True
+
+connect_db(app)
+```
+
+In terminal, `createdb magicDB`  
+`ipython3`  
+`%run app.py`  
+`db.create_all()`
+
+![create tables](./creatingTables.png)
+
+`psql`  
+`\c magicDB`  
+`SELECT * FROM users;`
+`SELECT * FROM cards;`
+
+![psql output](./newTablesPSQL.png)
+
+Add a `register` class method to User model in `models.py`
+```
+    @classmethod
+    def register(cls, name, email, username, password):
+        """Register user w/ hashed password & return user."""
+
+        hashed = bcrypt.generate_password_hash(password)
+
+        # turn bytestring into normal unicode utf8 string
+        hashed_utf8 = hashed.decode("utf8")
+
+        # return instance of user w/ username and hashed password
+        return cls(name=name, email=email, username=username, password=hashed_utf8)
+```
+
+`ipython3`, `%run app.py`, `user1 = User.register(sample data)`, `user1.username`, `user1.password`
+It works!
+![Terminal output](./Bcrypt1.png)
+
+---
+
+Authenticate class method on User model
+```
+@classmethod
+def authenticate(cls, username, password):
+    """Validate that user exists and password is correct. Return user if valid; else, return False """
+
+    u = User.query.filter_by(username=username).first()
+    if u and bcrypt.check_password_hash(u.password, password):
+        return u
+    else:
+        return False
+```
+
+`pip3 install psycopg2`
+
+View function for login
+```
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+
+    # if it's a request with a valid CSRF Token
+    if form.validate_on_submit():
+        # retrieve data from form
+        username = form.username.data
+        password = form.password.data
+
+        # verification
+        user = User.authenticate(username, password)
+
+        if user:
+            return redirect('/secret')
+        else:
+            form.username.errors = ['Invalid username/password']
+
+    else:
+        return render_template("login.html", form=form)
+```
+
+View function for register
+```
+@app.route('/register', methods=["GET", "POST"])
+def register():
+    form = RegisterForm()
+
+    # if it's a request with a valid CSRF Token
+    if form.validate_on_submit():
+        # retrieve data from form
+        name = form.name.data
+        email = form.email.data
+        username = form.username.data
+        password = form.password.data
+
+        # add to SQLAlchemy
+        newUser = User.register(name, email, username, password)
+        db.session.add(newUser)
+        db.session.commit()
+
+        # redirect
+        flash('Welcome! Successfully logged in')
+        return redirect('/secret')
+
+    return render_template("register.html", form=form)
 ```

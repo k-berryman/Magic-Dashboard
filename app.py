@@ -2,12 +2,18 @@
 
 from flask import Flask, render_template, jsonify, redirect
 from forms import AddForm, RegisterForm, LoginForm
+from models import connect_db, db, User, Card
 import requests
 
-app = Flask(__name__)
 
-# Flask-WTF requires an encryption key - the string can be anything
+app = Flask(__name__)
 app.config['SECRET_KEY'] = 'TESTINGGG'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///magicDB'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ECHO'] = True
+
+connect_db(app)
+
 
 @app.route('/')
 def home():
@@ -27,12 +33,14 @@ def register():
         password = form.password.data
 
         # add to SQLAlchemy
-        #user = User(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
-        #db.session.add(user)
-        #db.session.commit()
+        newUser = User.register(name, email, username, password)
+        db.session.add(newUser)
+        db.session.commit()
 
         # redirect
-        return redirect('/success')
+        flash('Welcome! Successfully logged in')
+        return redirect('/secret')
+
     return render_template("register.html", form=form)
 
 
@@ -46,10 +54,13 @@ def login():
         username = form.username.data
         password = form.password.data
 
-        # verification...?
+        # verification
+        user = User.authenticate(username, password)
 
-        # redirect
-        return redirect('/secret')
+        if user:
+            return redirect('/secret')
+        else:
+            form.username.errors = ['Invalid username/password']
 
     else:
         return render_template("login.html", form=form)
