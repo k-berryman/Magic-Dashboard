@@ -495,3 +495,35 @@ def register():
 
     return render_template("register.html", form=form)
 ```
+
+---
+
+### Hashing and Login - Authentication
+Now we have password hashing, but anyone can navigate to `/secret`. Let’s protect this route and make sure that only users who have logged in can access this route.
+
+After login or registering, store their username in the session.
+
+import session
+
+In `register` view func before redirecting,
+```
+# add new user's username to session
+session['sessionUsername'] = newUser.username
+```
+
+In `login` view func before redirecting,
+```
+# add user_id to session
+session['sessionUsername'] = user.username
+```
+
+Make the `/secret` route
+```
+@app.route('/secret')
+def secret():
+    if "sessionUsername" not in session:
+        flash('Please login first!')
+        return redirect('/')
+
+    return "You made it!"
+```

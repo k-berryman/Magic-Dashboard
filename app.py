@@ -1,6 +1,6 @@
 """test Flask with this"""
 
-from flask import Flask, render_template, jsonify, redirect
+from flask import Flask, render_template, jsonify, redirect, flash, session
 from forms import AddForm, RegisterForm, LoginForm
 from models import connect_db, db, User, Card
 import requests
@@ -37,6 +37,9 @@ def register():
         db.session.add(newUser)
         db.session.commit()
 
+        # add new user's username to session
+        session['sessionUsername'] = newUser.username
+
         # redirect
         flash('Welcome! Successfully logged in')
         return redirect('/secret')
@@ -58,13 +61,23 @@ def login():
         user = User.authenticate(username, password)
 
         if user:
+            # add user_id to session
+            session['sessionUsername'] = user.username
+
             return redirect('/secret')
         else:
             form.username.errors = ['Invalid username/password']
 
-    else:
-        return render_template("login.html", form=form)
+    return render_template("login.html", form=form)
 
+
+@app.route('/secret')
+def secret():
+    if "sessionUsername" not in session:
+        flash('Please login first!')
+        return redirect('/')
+
+    return "You made it!"
 
 
 
