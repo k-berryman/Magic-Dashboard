@@ -553,3 +553,53 @@ Display a template the shows information about that user (everything except for 
 > Make dashboard.html   
 > Pass user into dashboard.html
 > Change references from '/secret'
+
+---
+
+Let's add some styling
+
+# ADD MORE HERE
+---
+
+Many-to-Many
+
+```
+class Deck(db.Model):
+    """Deck."""
+
+    __tablename__ = "decks"
+
+    id = db.Column(db.Integer,
+        primary_key=True,
+        autoincrement=True)
+
+    name = db.Column(db.String(150),
+        nullable=False)
+
+    user_id = db.Column(db.Integer,
+        db.ForeginKey('users.id'))
+
+    card_id = db.Column(db.Integer,
+        db.ForeginKey('cards.id'))
+```
+
+`ipython3`, `%run app.py`, `db.drop_all()`, `db.create_all()`
+
+![users table](./users_psql.png)
+![cards table](./cards_psql.png)
+![decks table](./decks_psql.png)
+
+Still in `ipython3`,
+```
+user = User(name="Kaitlin Berryman", email="kaitlinberryman@gmail.com", username="GolgariGal", password="Simic123")
+db.session.add(user)
+db.session.commit()
+
+card = Card(name="Terastodon", picture="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=197137&type=card", cmc="8", price=3.13, colors="g")
+db.session.add(card)
+db.session.commit()
+
+deck_card = Deck(name="Aesi", user_id=1, card_id=1)
+db.session.add(deck_card)
+db.session.commit()
+```

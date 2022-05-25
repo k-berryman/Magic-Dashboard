@@ -4,8 +4,8 @@ from wtforms.validators import InputRequired, Optional, Length, Email
 from wtforms.fields import PasswordField
 
 
-class AddForm(FlaskForm):
-    """Form"""
+class AddCardForm(FlaskForm):
+    """Add Card Form"""
 
     cardName = StringField(
       "Card Name",

@@ -34,6 +34,9 @@ class User(db.Model):
     password = db.Column(db.String(500),
         nullable=False)
 
+    # go from a single user to associated user_decks (one or multiple)
+    # backref allows going from a Deck to the user based on id, showing all data of user (player)
+    user_decks = db.relationship('Deck', backref='player')
 
     @classmethod
     def register(cls, name, email, username, password):
@@ -84,6 +87,10 @@ class Card(db.Model):
 
     colors = db.Column(db.String(20),
         nullable=False)
+
+    # go from a single card to associated decks_with_card (one or multiple)
+    # backref allows going from a Deck to the card based on id, showing all data of card
+    decks_with_card = db.relationship('Deck', backref='card')
 
 
 class Deck(db.Model):

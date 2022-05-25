@@ -17,49 +17,14 @@
     background-image: url("https://images.alphacoders.com/265/thumb-1920-265693.png");
   }
 
-  .background {
-    width: 430px;
-    height: 520px;
-    position: absolute;
-    transform: translate(-50%,-50%);
-    left: 50%;
-    top: 50%;
-  }
-
-  .background .shape {
-    height: 200px;
-    width: 200px;
-    position: absolute;
-    border-radius: 50%;
-   }
-
-   .shape:first-child {
-     background: linear-gradient(
-       #600073,
-       #e566ff
-     );
-     left: -80px;
-     top: -80px;
-   }
-
-   .shape:last-child {
-     background: linear-gradient(
-       to right,
-       #082975,
-       #324b8a
-     );
-     right: -30px;
-     bottom: -80px;
-   }
-
   form {
-    height: 770px;
-    width: 450px;
-    background-color: rgba(255,255,255,0.13);
+    height: 475px;
+    width: 400px;
+    background-color: rgba(255,255,255,0.19);
     position: absolute;
     transform: translate(-50%,-50%);
     top: 50%;
-    left: 50%;
+    left: 20%;
     border-radius: 10px;
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255,255,255,0.1);
@@ -106,7 +71,7 @@
   }
 
   button {
-    margin-top: 50px;
+    margin-top: 20px;
     width: 100%;
     background-color: #ffffff;
     color: #080710;
@@ -139,13 +104,24 @@
 
   .bottom .reg {
     margin-right: 25px;
-    margin-left: 22px;
   }
 
   img {
-    height: 500px;
-    width: 100%;
+    height: 750px;
+    scale: 10%;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
     border-radius: 16px;
+  }
+
+  h1 {
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 5%;
+    left: 50%;
+    color: white;
   }
 
 </style>
@@ -158,23 +134,33 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
 
-<div class="background">
-    <div class="shape"></div>
-    <div class="shape"></div>
-</div>
 
-
+<h1>{{ user.username }}'s Dashboard</h1>
 
 <form method="POST">
-  <img src={{pic}} />
+  <h2>Search</h2>
+  <h5>Search for any magic card to preview it.</h5>
+  {{ form.hidden_tag() }} <!-- add type=hidden form fields -->
+  {{ form.csrf_token }}
 
-  <div class="bottom">
-    <div onclick="location.href='/register';" class="reg">Register</div>
-    <div onclick="location.href='/login';">Log In</div>
-  </div>
+  {% for field in form
+    if field.widget.input_type != 'hidden' %}
+    <p>
 
-  <button onclick="location.href='/rand';">Random Card</button>
+      <label>{{ field.label }}</label>
+      {{ field }}
+
+      {% for err in field.errors %}
+        {{ err }}
+      {% endfor %}
+
+    </p>
+  {% endfor %}
+
+  <button onclick="">Search</button>
+  <button>Add to Deck</button>
 </form>
 
+<img src="https://www.digipen.edu/sites/default/files/public/img/news/05-body/corey-bowen-his-magical-job-designing-magic-gathering-cards-body1.jpg" />
 
 {% endblock %}

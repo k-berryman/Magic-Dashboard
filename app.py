@@ -1,7 +1,7 @@
 """test Flask with this"""
 
 from flask import Flask, render_template, jsonify, redirect, flash, session
-from forms import AddForm, RegisterForm, LoginForm
+from forms import AddCardForm, RegisterForm, LoginForm
 from models import connect_db, db, User, Card, Deck
 import requests
 
@@ -81,12 +81,14 @@ def logout():
 
 @app.route('/dashboard/<string:username>')
 def dashboard(username):
+
     if "sessionUsername" not in session:
         flash('Please login first!')
         return redirect('/')
 
+    form = AddCardForm()
     user = User.query.filter_by(username=username).first()
-    return render_template("dashboard.html", user=user)
+    return render_template("tempdash.html", form=form, user=user)
 
 
 
