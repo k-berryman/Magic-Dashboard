@@ -68,7 +68,7 @@ def login():
         else:
             form.username.errors = ['Invalid username/password']
 
-    return render_template("templogin.html", form=form)
+    return render_template("login.html", form=form)
 
 
 @app.route('/logout')
@@ -103,8 +103,8 @@ def form():
         return render_template("index.html", form=form)
 
 
-@app.route('/req')
-def req():
+@app.route('/rand', methods=["GET", "POST"])
+def rand():
     resp = requests.get("https://api.scryfall.com/cards/random")
 
     data = resp.json()
@@ -113,4 +113,4 @@ def req():
 
     # using the APIs JSON data, return that to browser
     #return jsonify(data)
-    return render_template("card.html", pic=pic)
+    return render_template("rand.html", pic=pic)

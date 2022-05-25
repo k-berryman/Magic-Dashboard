@@ -33,28 +33,28 @@
     border-radius: 50%;
    }
 
-  .shape:first-child {
-    background: linear-gradient(
-      #1845ad,
-      #23a2f6
-    );
-    left: -80px;
-    top: -80px;
-  }
+   .shape:first-child {
+     background: linear-gradient(
+       #600073,
+       #e566ff
+     );
+     left: -80px;
+     top: -80px;
+   }
 
-  .shape:last-child {
-    background: linear-gradient(
-      to right,
-      #ff512f,
-      #f09819
-    );
-    right: -30px;
-    bottom: -80px;
-  }
+   .shape:last-child {
+     background: linear-gradient(
+       to right,
+       #082975,
+       #324b8a
+     );
+     right: -30px;
+     bottom: -80px;
+   }
 
   form {
-    height: 520px;
-    width: 400px;
+    height: 800px;
+    width: 450px;
     background-color: rgba(255,255,255,0.13);
     position: absolute;
     transform: translate(-50%,-50%);
@@ -134,10 +134,17 @@
 
   .bottom div:hover {
     background-color: rgba(255,255,255,0.47);
+    cursor: pointer;
   }
 
   .bottom .reg {
     margin-right: 25px;
+    margin-left: 22px;
+  }
+
+  img {
+    height: 500px;
+    width: 100%;
   }
 
 </style>
@@ -158,30 +165,14 @@
 
 
 <form method="POST">
-  <h1>Login</h1>
-  {{ form.hidden_tag() }} <!-- add type=hidden form fields -->
-  {{ form.csrf_token }}
-
-  {% for field in form
-    if field.widget.input_type != 'hidden' %}
-    <p>
-
-      <label>{{ field.label }}</label>
-      {{ field }}
-
-      {% for err in field.errors %}
-        {{ err }}
-      {% endfor %}
-
-    </p>
-  {% endfor %}
+  <img src={{pic}} />
 
   <div class="bottom">
-    <div class="reg">Register</div>
-    <div>Random Card</div>
+    <div onclick="location.href='/register';" class="reg">Register</div>
+    <div onclick="location.href='/login';">Log In</div>
   </div>
 
-  <button>Log In</button>
+  <button onclick="location.href='/rand';">Random Card</button>
 </form>
 
 
