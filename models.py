@@ -86,20 +86,20 @@ class Card(db.Model):
         nullable=False)
 
 
-#class Deck(db.Model):
-#    """Deck."""
+class Deck(db.Model):
+    """Deck."""
 
-#    __tablename__ = "decks"
+    __tablename__ = "decks"
 
-#    id = db.Column(db.Integer,
-#        primary_key=True,
-#        autoincrement=True)
+    id = db.Column(db.Integer,
+        primary_key=True,
+        autoincrement=True)
 
-#    name = db.Column(db.String(150),
-#        nullable=False)
+    name = db.Column(db.String(150),
+        nullable=False)
 
-#    user_id = db.Column(db.Integer,
-#        db.ForeginKey('users.id'))
+    user_id = db.Column(db.Integer,
+        db.ForeignKey('users.id'))
 
-#    card_id = db.Column(db.Integer,
-#        db.ForeginKey('cards.id'))
+    card_id = db.Column(db.Integer,
+        db.ForeignKey('cards.id'))

@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, jsonify, redirect, flash, session
 from forms import AddForm, RegisterForm, LoginForm
-from models import connect_db, db, User, Card
+from models import connect_db, db, User, Card, Deck
 import requests
 
 
