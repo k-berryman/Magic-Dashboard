@@ -97,3 +97,9 @@ class Card(db.Model):
 
 #    name = db.Column(db.String(150),
 #        nullable=False)
+
+#    user_id = db.Column(db.Integer,
+#        db.ForeginKey('users.id'))
+
+#    card_id = db.Column(db.Integer,
+#        db.ForeginKey('cards.id'))

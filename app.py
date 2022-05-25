@@ -68,12 +68,13 @@ def login():
         else:
             form.username.errors = ['Invalid username/password']
 
-    return render_template("login.html", form=form)
+    return render_template("templogin.html", form=form)
 
 
 @app.route('/logout')
 def logout():
-    session.pop('sessionUsername')
+    session.clear()
+    #session.pop('sessionUsername')
     flash('Goodbye! Logging out now..')
     return redirect('/')
 
