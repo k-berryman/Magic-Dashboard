@@ -107,7 +107,7 @@
   }
 
   img {
-    height: 750px;
+    height: 475px;
     scale: 10%;
     position: absolute;
     transform: translate(-50%,-50%);
@@ -119,9 +119,22 @@
   h1 {
     position: absolute;
     transform: translate(-50%,-50%);
-    top: 5%;
+    top: 7.5%;
     left: 50%;
     color: white;
+  }
+
+  #logout {
+      margin-top: 20px;
+      width: 10%;
+      background-color: #ffffff;
+      color: #080710;
+      padding: 15px 0;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 5px;
+      cursor: pointer;
+      float: right;
   }
 
 </style>
@@ -136,6 +149,7 @@
 
 
 <h1>{{ user.username }}'s Dashboard</h1>
+<button id="logout" onclick="location.href='/logout';">Log Out</button>
 
 <form method="POST">
   <h2>Search</h2>
@@ -156,11 +170,11 @@
 
     </p>
   {% endfor %}
-
-  <button onclick="">Search</button>
+  <button>Search</button>
   <button>Add to Deck</button>
 </form>
 
-<img src="https://www.digipen.edu/sites/default/files/public/img/news/05-body/corey-bowen-his-magical-job-designing-magic-gathering-cards-body1.jpg" />
+<img src={{pic}} />
+
 
 {% endblock %}

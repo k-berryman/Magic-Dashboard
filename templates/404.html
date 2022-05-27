@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block headcontent %}
+<style>
+  body {
+    background-color: #8b0000;
+  }
+
+  h1 {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+      font-size: 500%;
+      color: white;
+  }
+
+  h3 {
+    display: flex;
+    justify-content: center;
+    color: white;
+  }
+
+  button {
+    margin-top: 15px;
+    width: 100%;
+    background-color: #ffffff;
+    color: #080710;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+  <h1>Error</h1>
+  <h3>Did you spell the card's name correctly?</h3>
+
+  <button onclick="location.href='/';">Click Here to Try Again</button>
+{% endblock %}

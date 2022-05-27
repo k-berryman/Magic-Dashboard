@@ -1,6 +1,6 @@
 """test Flask with this"""
 
-from flask import Flask, render_template, jsonify, redirect, flash, session
+from flask import Flask, render_template, jsonify, redirect, flash, session, request
 from forms import AddCardForm, RegisterForm, LoginForm
 from models import connect_db, db, User, Card, Deck
 import requests
@@ -17,7 +17,7 @@ connect_db(app)
 
 @app.route('/')
 def home():
-    return render_template("home.html")
+    return redirect("/login")
 
 
 @app.route('/register', methods=["GET", "POST"])
@@ -51,6 +51,10 @@ def register():
 def login():
     form = LoginForm()
 
+    if "sessionUsername" in session:
+        sessionUsername = session['sessionUsername']
+        return redirect(f'/dashboard/{sessionUsername}')
+
     # if it's a request with a valid CSRF Token
     if form.validate_on_submit():
         # retrieve data from form
@@ -76,10 +80,10 @@ def logout():
     session.clear()
     #session.pop('sessionUsername')
     flash('Goodbye! Logging out now..')
-    return redirect('/')
+    return redirect('/login')
 
 
-@app.route('/dashboard/<string:username>')
+@app.route('/dashboard/<string:username>', methods=["GET", "POST"])
 def dashboard(username):
 
     if "sessionUsername" not in session:
@@ -88,8 +92,24 @@ def dashboard(username):
 
     form = AddCardForm()
     user = User.query.filter_by(username=username).first()
-    return render_template("tempdash.html", form=form, user=user)
 
+    # if it's a request with a valid CSRF Token
+    if form.validate_on_submit():
+        # retrieve data from form
+        cardName = form.cardName.data
+
+    try:
+        if request.method == 'POST':
+            resp = requests.get(f"https://api.scryfall.com/cards/named?fuzzy={cardName}")
+            data = resp.json()
+            pic = data["image_uris"]["normal"]
+
+        else:
+            pic = "https://www.digipen.edu/sites/default/files/public/img/news/05-body/corey-bowen-his-magical-job-designing-magic-gathering-cards-body1.jpg"
+
+        return render_template("tempdash.html", form=form, user=user, pic=pic)
+    except:
+        return redirect('/error404')
 
 
 @app.route('/form', methods=["GET", "POST"])
@@ -116,3 +136,8 @@ def rand():
     # using the APIs JSON data, return that to browser
     #return jsonify(data)
     return render_template("rand.html", pic=pic)
+
+
+@app.route('/error404')
+def error404():
+    return render_template("404.html")
