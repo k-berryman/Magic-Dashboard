@@ -79,7 +79,6 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
-    #session.pop('sessionUsername')
     flash('Goodbye! Logging out now..')
     return redirect('/login')
 
@@ -126,10 +125,7 @@ def rand():
 
     data = resp.json()
     pic = data["image_uris"]["normal"]
-    #print()
 
-    # using the APIs JSON data, return that to browser
-    #return jsonify(data)
     return render_template("rand.html", pic=pic)
 
 
@@ -182,25 +178,11 @@ def removeCard(cardName):
         return redirect('/')
 
     try:
-        #resp = requests.get(f"https://api.scryfall.com/cards/named?fuzzy={cardName}")
-        #data = resp.json()
-
-        # Get Card Data
-        #name = data["name"]
-        #picture = data["image_uris"]["normal"]
-        #cmc = data["cmc"]
-        #price = data["prices"]["usd"]
-        #type = data["type_line"]
-
         # Send to DB
         Card.query.filter_by(name=cardName).delete()
         db.session.commit()
-        #print("--------------------------------------")
-        #print(cardName)
-        #print("--------------------------------------")
 
         return redirect('/')
-        #return render_template("temp.html", user=user, card=cardName, name=name, picture=picture, cmc=cmc, price=price, colors=colors)
 
     except:
         return redirect('/error404')
@@ -214,10 +196,42 @@ def addDeck():
         if form.validate_on_submit():
             # retrieve data from form
             commander = form.commander.data
-        return redirect("/")
 
-    else:
-        return render_template("addDeck.html", form=form)
+            try:
+                # Get user for user ID
+                sessionUsername = session['sessionUsername']
+                user = User.query.filter_by(username=sessionUsername).first()
+
+                # Create card for commander
+                resp = requests.get(f"https://api.scryfall.com/cards/named?fuzzy={commander}")
+                data = resp.json()
+
+                # Get commander data
+                name = data["name"]
+                picture = data["image_uris"]["normal"]
+                cmc = data["cmc"]
+                price = data["prices"]["usd"]
+                type = data["type_line"]
+
+                # Send commander card to DB
+                newCard = Card(name=name, picture=picture, cmc=cmc, price=price, type=type, deck_id=1)
+                db.session.add(newCard)
+                db.session.commit()
+
+                # Get card ID for card ID
+                card = Card.query.filter_by(name=name).first()
+
+                # Create new deck and send to DB
+                newDeck = Deck(name=commander, user_id=user.id, card_id=card.id)
+                db.session.add(newDeck)
+                db.session.commit()
+
+                return redirect("/")
+
+            except:
+                return redirect("/error404")
+
+    return render_template("addDeck.html", form=form)
 
 
 @app.route('/expenseChart', methods=["GET", "POST"])

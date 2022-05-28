@@ -73,7 +73,7 @@ class Card(db.Model):
         primary_key=True,
         autoincrement=True)
 
-    name = db.Column(db.String(150),
+    name = db.Column(db.String(300),
         nullable=False)
 
     picture = db.Column(db.String(500),
@@ -85,7 +85,7 @@ class Card(db.Model):
     price = db.Column(db.Float,
         nullable=False)
 
-    type = db.Column(db.String(20),
+    type = db.Column(db.String(100),
         nullable=False)
 
     deck_id = db.Column(db.Integer,
