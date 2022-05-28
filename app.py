@@ -104,25 +104,15 @@ def dashboard(username):
             data = resp.json()
             pic = data["image_uris"]["normal"]
 
-        else:
-            pic = "https://www.digipen.edu/sites/default/files/public/img/news/05-body/corey-bowen-his-magical-job-designing-magic-gathering-cards-body1.jpg"
+            # add new user's username to session
+            session['sessionCard'] = cardName
 
-        return render_template("tempdash.html", form=form, user=user, pic=pic)
+        else:
+            pic = "https://preview.redd.it/qnnotlcehu731.jpg?auto=webp&s=55d9e57e829608fc8e632eb2e4165d816288177c"
+
+        return render_template("dashboard.html", form=form, user=user, pic=pic)
     except:
         return redirect('/error404')
-
-
-@app.route('/form', methods=["GET", "POST"])
-def form():
-    form = AddForm()
-
-    # if it's a post request with a valid CSRF Token
-    if form.validate_on_submit():
-        cardName = form.cardName.data
-        return redirect('/answer')
-
-    else:
-        return render_template("index.html", form=form)
 
 
 @app.route('/rand', methods=["GET", "POST"])
@@ -141,3 +131,40 @@ def rand():
 @app.route('/error404')
 def error404():
     return render_template("404.html")
+
+
+@app.route('/addingcard/<string:username>', methods=["GET", "POST"])
+def addCard(username):
+    if "sessionUsername" not in session:
+        flash('Please login first!')
+        return redirect('/')
+
+    if "sessionCard" not in session:
+        flash('Please search for a card!')
+        return redirect('/')
+
+    user = User.query.filter_by(username=username).first()
+
+    cardName = session['sessionCard']
+
+    try:
+        resp = requests.get(f"https://api.scryfall.com/cards/named?fuzzy={cardName}")
+        data = resp.json()
+
+        # Get Card Data
+        name = data["name"]
+        picture = data["image_uris"]["normal"]
+        cmc = data["cmc"]
+        price = data["prices"]["usd"]
+        colors = data["colors"]
+
+        # Send to DB
+        newCard = Card(name=name, picture=picture, cmc=cmc, price=price, colors=colors)
+        db.session.add(newCard)
+        db.session.commit()
+
+        #return redirect(f'/dashboard/{username}')
+        return render_template("temp.html", user=user, card=cardName, name=name, picture=picture, cmc=cmc, price=price, colors=colors)
+
+    except:
+        return redirect('/error404')

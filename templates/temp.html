@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>u made it</h1>
+{{name}}
+{{cmc}}
+{{price}}
+
+{% for color in colors %}
+  {{ color }}
+{% endfor %}
+
+<img src="{{picture}}" />
+
+{% endblock %}
