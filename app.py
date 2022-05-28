@@ -235,10 +235,20 @@ def addDeck():
 
     return render_template("addDeck.html", form=form)
 
+#@app.route('/temp/<string:deckname>', methods=["GET", "POST"])
+#def tempp(deckname):
+#    return deckname
+
+
+@app.route('/setDeck/<string:deckname>', methods=["GET", "POST"])
+def setDeck():
+    return render_template('expenseChart.html')
+
 
 @app.route('/expenseChart', methods=["GET", "POST"])
 def expenseChart():
     return render_template('expenseChart.html')
+
 
 @app.route('/manaCurveChart', methods=["GET", "POST"])
 def manaCurveChart():

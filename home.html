@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if "sessionUsername" not in session: %}
+    <p>ahahaha fool</p>
+    <div onload="location.href='/login';" class="reg">Log In</div>
+{% endif %}
+
+{% if "sessionUsername" in session: %}
+    <p>oh hello</p>
+{% endif %}
+
+{% endblock %}

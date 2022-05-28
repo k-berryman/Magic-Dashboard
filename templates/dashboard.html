@@ -184,58 +184,11 @@
       margin-left: -50px;
   }
 
-  <!-- Drop down style provided by https://www.sliderrevolution.com/resources/css-select-styles/-->
-  .select-dropdown,
-  .select-dropdown * {
-    margin: 0;
-    padding: 0;
-    position: relative;
-    box-sizing: border-box;
-  }
-
-  .select-dropdown {
-    position: relative;
-    background-color: white;
-    border-radius: 4px;
-    width: 18%;
-    margin-left: 790px;
-  }
-
-  .select-dropdown select {
-    font-size: 1rem;
-    font-weight: normal;
-    max-width: 100%;
-    padding: 8px 24px 8px 10px;
-    border: none;
-    background-color: transparent;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-    appearance: none;
-  }
-
-  .select-dropdown select:active, .select-dropdown select:focus {
-    outline: none;
-    box-shadow: none;
-  }
-
-  .select-dropdown:after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: 8px;
-    width: 0;
-    height: 0;
-    margin-top: -2px;
-    border-top: 5px solid #aaa;
-    border-right: 5px solid transparent;
-    border-left: 5px solid transparent;
-  }
-
   #addDeckButton {
     height: 30px;
     width: 30px;
-    margin-left: -325px;
-    margin-top: -189px;
+    margin-left: -345px;
+    margin-top: -301px;
   }
 
   #addDeckButton:hover{
@@ -307,9 +260,16 @@
     left: 86%;
   }
 
-  #dropdown {
-    left: -71%;
-    margin-top: -445px;
+  #selectDeck {
+    position:absolute;
+    top:0;
+    left:0;
+    margin-top: 40px;
+    margin-left: 110px;
+    height: 155px;
+    width: 350px;
+    overflow-y: auto;
+    color: white;
   }
 
 </style>
@@ -354,13 +314,15 @@
 
 <img src={{pic}} />
 
-<div class="select-dropdown" id="dropdown">
-  <select>
-    <option>Please Select Your Deck</option>
+<div id="selectDeck">
+
+    <h3>Please Select Your Deck</h3>
     {% for deck in usersDecks %}
-      <option>{{deck.name}}</option>
+      <div onclick="location.href='/setDeck/{{deck.name}}';">
+        <button>{{deck.name}}</button>
+      </div>
     {% endfor %}
-  </select>
+
 </div>
 
 <img
