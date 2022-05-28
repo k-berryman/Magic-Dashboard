@@ -47,3 +47,12 @@ class LoginForm(FlaskForm):
     password = PasswordField("Password",
         validators=[
             InputRequired("Password can't be blank")])
+
+
+class DeckForm(FlaskForm):
+    """Deck Form"""
+
+    commander = StringField("Commander's Name",
+        validators=[
+            InputRequired("Commander's name can't be blank"),
+            Length(min=1, max=50, message="Commander's name must be 50 characters or less")])

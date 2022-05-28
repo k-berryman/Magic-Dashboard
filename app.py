@@ -1,7 +1,7 @@
 """test Flask with this"""
 
 from flask import Flask, render_template, jsonify, redirect, flash, session, request
-from forms import AddCardForm, RegisterForm, LoginForm
+from forms import AddCardForm, RegisterForm, LoginForm, DeckForm
 from models import connect_db, db, User, Card, Deck
 import requests
 
@@ -168,3 +168,20 @@ def addCard(username):
 
     except:
         return redirect('/error404')
+
+
+@app.route('/addDeck', methods=["GET", "POST"])
+def addDeck():
+    form = DeckForm()
+    print("WE did not DID ITTTTT")
+    if request.method == 'POST':
+        # if it's a request with a valid CSRF Token
+        if form.validate_on_submit():
+            # retrieve data from form
+            commander = form.commander.data
+            print("WE DID ITTTTT")
+        print("WE did not DID ITTTTT")
+        return redirect("/")
+
+    else:
+        return render_template("addDeck.html", form=form)
