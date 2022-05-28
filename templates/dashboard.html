@@ -285,8 +285,7 @@
 
 
 <form id="form2" method="POST">
-  <h3>{{user.username}}'s Decks</h3>
-  <h5>Here are all the magic cards in your deck.</h5>
+  <h3>{{user.username}}'s Decklist</h3>
   {{ form.hidden_tag() }} <!-- add type=hidden form fields -->
   {{ form.csrf_token }}
 
@@ -294,32 +293,13 @@
     if field.widget.input_type != 'hidden' %}
   {% endfor %}
 
+
   <ul>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
-    <li>Thing!!</li>
+    {% for card in deckCards %}
+      <li>{{ card.name }}</li>
+    {% endfor %}
   </ul>
+
 </form>
 
 

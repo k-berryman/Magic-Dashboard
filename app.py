@@ -110,7 +110,11 @@ def dashboard(username):
         else:
             pic = "https://preview.redd.it/qnnotlcehu731.jpg?auto=webp&s=55d9e57e829608fc8e632eb2e4165d816288177c"
 
-        return render_template("dashboard.html", form=form, user=user, pic=pic)
+
+        # Get Deck data
+        deckCards = Card.query.all();
+
+        return render_template("dashboard.html", form=form, user=user, pic=pic, deckCards=deckCards)
     except:
         return redirect('/error404')
 
@@ -173,14 +177,11 @@ def addCard(username):
 @app.route('/addDeck', methods=["GET", "POST"])
 def addDeck():
     form = DeckForm()
-    print("WE did not DID ITTTTT")
     if request.method == 'POST':
         # if it's a request with a valid CSRF Token
         if form.validate_on_submit():
             # retrieve data from form
             commander = form.commander.data
-            print("WE DID ITTTTT")
-        print("WE did not DID ITTTTT")
         return redirect("/")
 
     else:
