@@ -379,7 +379,7 @@
     {% for card in deckCards %}
       <div id="decklist">
         <li>{{ card.name }}</li>
-        <p id="pDecklist">✕</p>
+        <p onclick="location.href='/removingcard/{{ card.name }}';" id="pDecklist">✕</p>
       </div>
     {% endfor %}
   </ul>

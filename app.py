@@ -175,29 +175,31 @@ def addCard(username):
         return redirect('/error404')
 
 
-@app.route('/removingcard/<string:username>', methods=["GET", "POST"])
-def removeCard(username):
+@app.route('/removingcard/<string:cardName>', methods=["GET", "POST"])
+def removeCard(cardName):
     if "sessionUsername" not in session:
         flash('Please login first!')
         return redirect('/')
 
-    user = User.query.filter_by(username=username).first()
-
     try:
-        resp = requests.get(f"https://api.scryfall.com/cards/named?fuzzy={cardName}")
-        data = resp.json()
+        #resp = requests.get(f"https://api.scryfall.com/cards/named?fuzzy={cardName}")
+        #data = resp.json()
 
         # Get Card Data
-        name = data["name"]
-        picture = data["image_uris"]["normal"]
-        cmc = data["cmc"]
-        price = data["prices"]["usd"]
-        type = data["type_line"]
+        #name = data["name"]
+        #picture = data["image_uris"]["normal"]
+        #cmc = data["cmc"]
+        #price = data["prices"]["usd"]
+        #type = data["type_line"]
 
         # Send to DB
+        Card.query.filter_by(name=cardName).delete()
+        db.session.commit()
+        #print("--------------------------------------")
+        #print(cardName)
+        #print("--------------------------------------")
 
-
-        return redirect(f'/dashboard/{username}')
+        return redirect('/')
         #return render_template("temp.html", user=user, card=cardName, name=name, picture=picture, cmc=cmc, price=price, colors=colors)
 
     except:
