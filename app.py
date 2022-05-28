@@ -114,7 +114,9 @@ def dashboard(username):
         # Get Deck data
         deckCards = Card.query.all();
 
-        return render_template("dashboard.html", form=form, user=user, pic=pic, deckCards=deckCards)
+        usersDecks = Deck.query.all();
+
+        return render_template("dashboard.html", form=form, user=user, pic=pic, deckCards=deckCards, usersDecks=usersDecks)
     except:
         return redirect('/error404')
 
