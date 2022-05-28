@@ -212,7 +212,7 @@
 
   #expenses {
     margin-left: 575px;
-    margin-top: 857px;
+    margin-top: 440px;
     margin-bottom: 40px;
   }
 
@@ -222,7 +222,7 @@
 
   #manaCurve {
     margin-right: 575px;
-    margin-top: -129px;
+    margin-top: -119px;
     margin-bottom: 35px;
   }
 
@@ -309,7 +309,7 @@
 
 </form>
 
-<button id="addToDeck" onclick="location.href='/addingcard/{{user.username}}';">Add to Deck ({{user.username}})</button>
+<button id="addToDeck" onclick="location.href='/addingcard/{{user.username}}';">Add to Deck ({{ deckName }})</button>
 
 
 <img src={{pic}} />
@@ -333,7 +333,7 @@
 
 
 <form id="form2" method="POST">
-  <h3>{{user.username}}'s Decklist</h3>
+  <h3>Decklist for {{ deckName }}</h3>
   {{ form.hidden_tag() }} <!-- add type=hidden form fields -->
   {{ form.csrf_token }}
 

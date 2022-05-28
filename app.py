@@ -112,11 +112,18 @@ def dashboard(username):
 
 
         # Get Deck data
-        deckCards = Card.query.all();
+        if "sessionDeckName" in session:
+            deckCards = Card.query.all();
+            deckName = session['sessionDeckName']
+
+        else:
+            deckCards = Card.query.all();
+            deckName = "All Cards"
+
 
         usersDecks = Deck.query.all();
 
-        return render_template("dashboard.html", form=form, user=user, pic=pic, deckCards=deckCards, usersDecks=usersDecks)
+        return render_template("dashboard.html", form=form, user=user, pic=pic, deckCards=deckCards, usersDecks=usersDecks, deckName=deckName)
     except:
         return redirect('/error404')
 
@@ -235,14 +242,13 @@ def addDeck():
 
     return render_template("addDeck.html", form=form)
 
-#@app.route('/temp/<string:deckname>', methods=["GET", "POST"])
-#def tempp(deckname):
-#    return deckname
-
 
 @app.route('/setDeck/<string:deckname>', methods=["GET", "POST"])
-def setDeck():
-    return render_template('expenseChart.html')
+def setDeck(deckname):
+    # add deck to session
+    session['sessionDeckName'] = deckname
+
+    return redirect("/")
 
 
 @app.route('/expenseChart', methods=["GET", "POST"])
