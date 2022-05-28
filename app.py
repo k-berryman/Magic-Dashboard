@@ -1,9 +1,10 @@
 """test Flask with this"""
 
-from flask import Flask, render_template, jsonify, redirect, flash, session, request
+from flask import Flask, render_template, jsonify, redirect, flash, session, request, Markup
 from forms import AddCardForm, RegisterForm, LoginForm, DeckForm
 from models import connect_db, db, User, Card, Deck
 import requests
+import matplotlib.pyplot as plt
 
 
 app = Flask(__name__)
@@ -160,15 +161,44 @@ def addCard(username):
         picture = data["image_uris"]["normal"]
         cmc = data["cmc"]
         price = data["prices"]["usd"]
-        colors = data["colors"]
+        type = data["type_line"]
 
         # Send to DB
-        newCard = Card(name=name, picture=picture, cmc=cmc, price=price, colors=colors)
+        newCard = Card(name=name, picture=picture, cmc=cmc, price=price, type=type, deck_id=1)
         db.session.add(newCard)
         db.session.commit()
 
-        #return redirect(f'/dashboard/{username}')
-        return render_template("temp.html", user=user, card=cardName, name=name, picture=picture, cmc=cmc, price=price, colors=colors)
+        return redirect(f'/dashboard/{username}')
+        #return render_template("temp.html", user=user, card=cardName, name=name, picture=picture, cmc=cmc, price=price, colors=colors)
+
+    except:
+        return redirect('/error404')
+
+
+@app.route('/removingcard/<string:username>', methods=["GET", "POST"])
+def removeCard(username):
+    if "sessionUsername" not in session:
+        flash('Please login first!')
+        return redirect('/')
+
+    user = User.query.filter_by(username=username).first()
+
+    try:
+        resp = requests.get(f"https://api.scryfall.com/cards/named?fuzzy={cardName}")
+        data = resp.json()
+
+        # Get Card Data
+        name = data["name"]
+        picture = data["image_uris"]["normal"]
+        cmc = data["cmc"]
+        price = data["prices"]["usd"]
+        type = data["type_line"]
+
+        # Send to DB
+
+
+        return redirect(f'/dashboard/{username}')
+        #return render_template("temp.html", user=user, card=cardName, name=name, picture=picture, cmc=cmc, price=price, colors=colors)
 
     except:
         return redirect('/error404')
@@ -186,3 +216,12 @@ def addDeck():
 
     else:
         return render_template("addDeck.html", form=form)
+
+
+@app.route('/expenseChart', methods=["GET", "POST"])
+def expenseChart():
+    return render_template('expenseChart.html')
+
+@app.route('/manaCurveChart', methods=["GET", "POST"])
+def manaCurveChart():
+    return render_template('manaCurveChart.html')

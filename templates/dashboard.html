@@ -48,6 +48,22 @@
     overflow-y: auto;
   }
 
+  #form3 {
+    height: 400px;
+    width: 1265px;
+    background-color: rgba(255,255,255,0.19);
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 115%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 50px 35px;
+    overflow-y: auto;
+  }
+
   form *{
     font-family: 'Poppins',sans-serif;
     color: #ffffff;
@@ -227,6 +243,71 @@
     cursor: pointer;
   }
 
+  #decklist {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 0 0;
+  }
+
+  #pDecklist {
+    margin: 0 10px;
+  }
+
+  #pDecklist:hover {
+    cursor: pointer;
+  }
+
+  #expenses {
+    margin-left: 575px;
+    margin-top: 857px;
+    margin-bottom: 40px;
+  }
+
+  #expenses button {
+    height: 68px;
+  }
+
+  #manaCurve {
+    margin-right: 575px;
+    margin-top: -129px;
+    margin-bottom: 35px;
+  }
+
+  #manaCurve button {
+    height: 68px;
+  }
+
+  #recommended1 {
+    height: 300px;
+    margin-top: 22px;
+    left: 14%;
+  }
+
+  #recommended2 {
+    height: 300px;
+    margin-top: 22px;
+    left: 32%;
+  }
+
+  #recommended3 {
+    height: 300px;
+    margin-top: 22px;
+    left: 50%;
+  }
+
+  #recommended4 {
+    height: 300px;
+    margin-top: 22px;
+    left: 68%;
+  }
+
+  #recommended5 {
+    height: 300px;
+    margin-top: 22px;
+    left: 86%;
+  }
+
 </style>
 {% endblock %}
 
@@ -296,11 +377,37 @@
 
   <ul>
     {% for card in deckCards %}
-      <li>{{ card.name }}</li>
+      <div id="decklist">
+        <li>{{ card.name }}</li>
+        <p id="pDecklist">✕</p>
+      </div>
     {% endfor %}
   </ul>
-
 </form>
+
+<form id="form3" method="POST">
+  <h3>Recommended Cards</h3>
+
+  <img id="recommended1" src={{pic}} />
+  <img id="recommended2" src={{pic}} />
+  <img id="recommended3" src={{pic}} />
+  <img id="recommended4" src={{pic}} />
+  <img id="recommended5" src={{pic}} />
+</form>
+
+<div id="expenses" onclick="location.href='/expenseChart';">
+  <button>
+    Expenses
+  </button>
+</div>
+
+<div id="manaCurve" onclick="location.href='/manaCurveChart';">
+  <button>
+    Mana Curve
+  </button>
+</div>
+
+
 
 
 {% endblock %}

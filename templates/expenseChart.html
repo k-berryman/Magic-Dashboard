@@ -1,0 +1,39 @@
+<div class="shadow-lg rounded-lg overflow-hidden w-500 h-500">
+  <div class="py-3 px-5 bg-gray-50">Expense Chart</div>
+  <canvas class="p-10" id="chartBar"></canvas>
+</div>
+
+<!-- Required chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Chart bar -->
+<!-- PROVIDED BY TAILWIND CSS -->
+<script>
+  const labelsBarChart = [
+    "January",
+    "February",
+    "March"
+  ];
+  const dataBarChart = {
+    labels: labelsBarChart,
+    datasets: [
+      {
+        label: "Expense Chart",
+        backgroundColor: "hsl(252, 82.9%, 67.8%)",
+        borderColor: "hsl(252, 82.9%, 67.8%)",
+        data: [0, 10, 5],
+      },
+    ],
+  };
+
+  const configBarChart = {
+    type: "bar",
+    data: dataBarChart,
+    options: {},
+  };
+
+  var chartBar = new Chart(
+    document.getElementById("chartBar"),
+    configBarChart
+  );
+</script>
