@@ -113,12 +113,19 @@ def dashboard(username):
 
         # Get Deck data
         if "sessionDeckName" in session:
-            deckCards = Card.query.all();
             deckName = session['sessionDeckName']
 
+            # Get cardID to look from Card table to Deck table
+            commander = Card.query.filter_by(name=deckName).first()
+
+            deckCards = Card.query.filter_by(deck_id = commander.deck_id).all()
+            print('---------------------------------------------------')
+            print(deckCards)
+            print('---------------------------------------------------')
+
         else:
-            deckCards = Card.query.all();
             deckName = "All Cards"
+            deckCards = Card.query.all();
 
 
         usersDecks = Deck.query.all();
@@ -168,8 +175,13 @@ def addCard(username):
         price = data["prices"]["usd"]
         type = data["type_line"]
 
+        # Get cardID to look from Card table to Deck table
+        deckName = session['sessionDeckName']
+        commander = Card.query.filter_by(name=deckName).first()
+        deck_id = commander.deck_id
+
         # Send to DB
-        newCard = Card(name=name, picture=picture, cmc=cmc, price=price, type=type, deck_id=1)
+        newCard = Card(name=name, picture=picture, cmc=cmc, price=price, type=type, deck_id=deck_id)
         db.session.add(newCard)
         db.session.commit()
 
@@ -223,7 +235,8 @@ def addDeck():
                 type = data["type_line"]
 
                 # Send commander card to DB
-                newCard = Card(name=name, picture=picture, cmc=cmc, price=price, type=type, deck_id=1)
+                # deck_id is 9 because i've deleted 8 previous decks
+                newCard = Card(name=name, picture=picture, cmc=cmc, price=price, type=type, deck_id=9)
                 db.session.add(newCard)
                 db.session.commit()
 
@@ -234,6 +247,11 @@ def addDeck():
                 newDeck = Deck(name=commander, user_id=user.id, card_id=card.id)
                 db.session.add(newDeck)
                 db.session.commit()
+
+                # Get deck.name for deckname in sesison
+                deck = Deck.query.filter_by(name=name).first()
+
+                session['sessionDeckName'] = deck.name
 
                 return redirect("/")
 
