@@ -79,13 +79,16 @@ class Card(db.Model):
     picture = db.Column(db.String(500),
         nullable=False)
 
-    cmc = db.Column(db.String(500),
+    cmc = db.Column(db.Float,
         nullable=False)
 
     price = db.Column(db.Float,
         nullable=False)
 
-    colors = db.Column(db.String(20),
+    type = db.Column(db.String(20),
+        nullable=False)
+
+    deck_id = db.Column(db.Integer,
         nullable=False)
 
     # go from a single card to associated decks_with_card (one or multiple)
