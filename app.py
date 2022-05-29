@@ -82,9 +82,9 @@ def logout():
     flash('Goodbye! Logging out now..')
     return redirect('/login')
 
-
-@app.route('/dashboard/<string:username>', methods=["GET", "POST"])
-def dashboard(username):
+@app.route('/dashboard/<string:username>', defaults={'cardToNamePreview': None}, methods=["GET", "POST"])
+@app.route('/dashboard/<string:username>/<string:cardToNamePreview>', methods=["GET", "POST"])
+def dashboard(username, cardToNamePreview):
 
     if "sessionUsername" not in session:
         flash('Please login first!')
@@ -107,8 +107,14 @@ def dashboard(username):
             # add new user's username to session
             session['sessionCard'] = cardName
 
-        else:
+        elif cardToNamePreview == None:
             pic = "https://preview.redd.it/qnnotlcehu731.jpg?auto=webp&s=55d9e57e829608fc8e632eb2e4165d816288177c"
+
+        else:
+            # Get card ID for card picture
+            tempCard = Card.query.filter_by(name=cardToNamePreview).first()
+
+            pic = tempCard.picture
 
 
         # Get Deck data
@@ -274,6 +280,19 @@ def setDeck(deckname):
     session['sessionDeckName'] = deckname
 
     return redirect("/")
+
+
+@app.route('/previewOnly/<string:cardname>', methods=["GET", "POST"])
+def previewOnly(cardname):
+    # Get card ID for card picture
+    card = Card.query.filter_by(name=cardname).first()
+
+    # Get user for username
+    sessionUsername = session['sessionUsername']
+    user = User.query.filter_by(username=sessionUsername).first()
+
+    return redirect(f'/dashboard/{user.username}/{card.name}')
+
 
 
 @app.route('/expenseChart', methods=["GET", "POST"])
