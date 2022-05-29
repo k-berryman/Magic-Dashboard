@@ -250,11 +250,8 @@ def addDeck():
 
 
                 # Figure out deck id
-                print('---------------------------------------------------')
                 numDecks = Deck.query.count()
                 newDeckID = numDecks + 1
-                print('------', numDecks, ' decks ------')
-                print('---------------------------------------------------')
 
                 # Send commander card to DB
                 newCard = Card(name=name, picture=picture, cmc=cmc, price=price, type=type, deck_id=newDeckID)
@@ -304,7 +301,16 @@ def previewOnly(cardname):
 
 @app.route('/expenseChart', methods=["GET", "POST"])
 def expenseChart():
-    data=[.3,2,7]
+    data=[]
+
+    # Get deck cards
+    deckName = session['sessionDeckName']
+    commander = Card.query.filter_by(name=deckName).first()
+    deckCards = Card.query.filter_by(deck_id = commander.deck_id).all()
+
+    for card in deckCards:
+        data.append(card.price)
+
     return render_template('expenseChart.html', data=data)
 
 
