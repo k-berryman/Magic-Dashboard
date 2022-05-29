@@ -234,9 +234,16 @@ def addDeck():
                 price = data["prices"]["usd"]
                 type = data["type_line"]
 
+
+                # Figure out deck id
+                print('---------------------------------------------------')
+                numDecks = Deck.query.count()
+                newDeckID = numDecks + 1
+                print('------', numDecks, ' decks ------')
+                print('---------------------------------------------------')
+
                 # Send commander card to DB
-                # deck_id is 9 because i've deleted 8 previous decks
-                newCard = Card(name=name, picture=picture, cmc=cmc, price=price, type=type, deck_id=9)
+                newCard = Card(name=name, picture=picture, cmc=cmc, price=price, type=type, deck_id=newDeckID)
                 db.session.add(newCard)
                 db.session.commit()
 
