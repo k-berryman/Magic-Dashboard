@@ -9,12 +9,14 @@ import os
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///magicDB'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 
 # use secret key in production or default to our dev one
-app.config['SECRET_KEY'] = os.enivron.get('SECRET_KEY', 'shh')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'shh')
+
+# production or dev DB
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///magicDB')
 
 connect_db(app)
 
