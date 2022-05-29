@@ -606,3 +606,137 @@ db.session.commit()
 
 # Adding Graphs
 Tailwind CSS
+
+# Heroku
+Make an account on Heroku
+Install CLI `brew install heroku/brew/heroku`
+
+Configure production ready server on heroku called gunicorn
+`pip3 install gunicorn`
+
+Prepping requirements.txt
+`pip3 freeze > requirements.txt` and make sure venv/ is in .gitignore
+
+Adding a Procfile (tells Heroku what command to run to start server)
+`echo "web: gunicorn app:app" > Procfile` in main dir
+
+Adding runtime.txt (tell Heroku python version)
+I'm using Python 3.9.7
+`echo "python-3.9.7" > runtime.txt`
+
+Login to heroku account via CLI
+`heroku login`
+
+Create an app
+Make sure everything is committed via git
+`heroku create kaitlinsmagicdash`
+
+`git remote -v`
+heroku is added to remotes
+
+push to heroku
+`git push heroku master`
+(this outputs https://git.heroku.com/kaitlinsmagicdash.git)
+
+`heroku open` opens it up in the web at https://kaitlinsmagicdash.herokuapp.com/login
+However, internal server errors because Postgres isn't set up yet and so our models don't work. Don't panic!!
+
+View errors with `heroku logs --tail`
+
+Since we're on a different server, we need different environment variable values
+dev vs. prod
+`heroku config:set FLASK_ENV=production`
+`heroku config` to see env vars
+
+`heroku config:set SECRET_KEY=actualsecret`
+
+In `app.py`,
+```
+import os
+
+# use secret key in production or default to our dev one
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'shh')
+```
+
+`git add .`
+`git commit -m "Add OS for environ var"`
+`git push heroku master`
+
+--
+
+## Create postgres on Heroku and connect our app to that DB instead of our local one
+
+Could configure custom domain via heroku dashboard, but we're not going to
+
+`heroku addons:create heroku-postgresql:hobby-dev`
+Install an add-on to our heroku app which is for our db
+hobby-dev is the tier/plan on heroku (the free one)
+
+`heroku config`
+We see DATABASE_URL
+
+In `app.py`,
+```
+import os
+
+# production or dev DB
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///magicDB')
+```
+Yes, it still works locally
+
+`git add .`
+`git commit -m "Add DB to env var for prod"`
+`git push heroku master`
+
+--
+
+Create tables on Heroku
+
+Connect to postgres directly `heroku pg:psql`
+This connects us to the heroku shell with our db
+You could do postgres commands here, but we're not gonna
+
+We're going to make a `seed.py` file
+```
+from models import db
+from app import app
+
+db.drop_all()
+db.create_all()
+```
+(commit this code)
+
+We need to run this seed file on heroku
+To run this on our prod server, `heroku run python seed.py`
+
+## BUG WAS HERE
+https://stackoverflow.com/questions/62688256/sqlalchemy-exc-nosuchmoduleerror-cant-load-plugin-sqlalchemy-dialectspostgre
+https://help.heroku.com/ZKNTJQSK/why-is-sqlalchemy-1-4-x-not-connecting-to-heroku-postgres
+I followed heroku's instructions, but that didn't work
+I just tried and tried until it worked
+```
+# production or dev DB
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(prodURI, 'postgresql:///magicDB')
+try:
+    prodURI = os.getenv('DATABASE_URL')
+    prodURI = prodURI.replace("postgres://", "postgresql://")
+    app.config['SQLALCHEMY_DATABASE_URI'] = prodURI
+    print(prodURI)
+
+except:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///magicDB'
+```
+
+Try this again
+`heroku run python seed.py`
+
+Bug fixed :-)
+
+Tables made
+
+`heroku open`
+
+Register a user -- app works!
+Everything works!
+
+Any changes? Just push it to heroku

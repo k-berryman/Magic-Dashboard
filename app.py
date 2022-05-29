@@ -17,7 +17,6 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'shh')
 
 # production or dev DB
 #app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(prodURI, 'postgresql:///magicDB')
-
 try:
     prodURI = os.getenv('DATABASE_URL')
     prodURI = prodURI.replace("postgres://", "postgresql://")
