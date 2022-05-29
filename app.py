@@ -5,13 +5,16 @@ from forms import AddCardForm, RegisterForm, LoginForm, DeckForm
 from models import connect_db, db, User, Card, Deck
 import requests
 import matplotlib.pyplot as plt
+import os
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'TESTINGGG'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///magicDB'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
+
+# use secret key in production or default to our dev one
+app.config['SECRET_KEY'] = os.enivron.get('SECRET_KEY', 'shh')
 
 connect_db(app)
 
