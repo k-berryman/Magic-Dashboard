@@ -279,7 +279,7 @@ def setDeck(deckname):
     # add deck to session
     session['sessionDeckName'] = deckname
 
-    return redirect("/")
+    return redirect(f"/previewOnly/{deckname}")
 
 
 @app.route('/previewOnly/<string:cardname>', methods=["GET", "POST"])
