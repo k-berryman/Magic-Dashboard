@@ -1,6 +1,8 @@
 # Magic The Gathering Stats Dashboard
 Scryfall API docs - https://scryfall.com/docs/api
 
+Final App Deployed at https://kaitlinsmagicdash.herokuapp.com/
+
 ### Creating a new Flask App
 
 -   Create a new virtual environment in my directory  `python3 -m venv env`
