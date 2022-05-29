@@ -1,7 +1,22 @@
 <div class="shadow-lg rounded-lg overflow-hidden w-500 h-500">
-  <div class="py-3 px-5 bg-gray-50">Expense Chart</div>
+  <h1>Mana Curve Chart</h1>
+  <h3>Converted Mana Cost (x-axis) vs. Amount of Cards in Deck with that CMC (y-axis)</h3>
+  <button onclick="location.href='/';">Return to Dashboard</button>
+
+  <div class="py-3 px-5 bg-gray-50">Mana curves help determine the speed of your deck.</div>
   <canvas class="p-10" id="chartBar"></canvas>
+
+  {% for dataPoint in data %}
+    <p>{{dataPoint}}</p>
+  {% endfor %}
+
 </div>
+
+<style>
+  p {
+    visibility:hidden;
+  }
+</style>
 
 <!-- Required chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -9,19 +24,33 @@
 <!-- Chart bar -->
 <!-- PROVIDED BY TAILWIND CSS -->
 <script>
+  const getData = () => {
+    let myData = []
+    let pData = document.getElementsByTagName("p");
+    for(let i = 0; i < pData.length; i++) {
+      myData.push(Number(pData[i].innerHTML));
+    }
+    return myData
+  }
+
   const labelsBarChart = [
-    "January",
-    "February",
-    "March"
+    "0 CMC",
+    "1 CMC",
+    "2 CMC",
+    "3 CMC",
+    "4 CMC",
+    "5 CMC",
+    "6 CMC",
+    "7 CMC",
+    "8+ CMC",
   ];
+
   const dataBarChart = {
     labels: labelsBarChart,
     datasets: [
       {
-        label: "Expense Chart",
-        backgroundColor: "hsl(252, 82.9%, 67.8%)",
-        borderColor: "hsl(252, 82.9%, 67.8%)",
-        data: [0, 10, 5],
+        label: "Amount of Cards in Deck with that CMC",
+        data: getData()
       },
     ],
   };

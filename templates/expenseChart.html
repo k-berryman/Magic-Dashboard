@@ -1,5 +1,9 @@
 <div class="shadow-lg rounded-lg overflow-hidden w-500 h-500">
-  <div class="py-3 px-5 bg-gray-50">Expense Chart</div>
+  <h1>Expense Chart</h1>
+  <h3>Price Categories (x-axis) vs. Amount of Cards in Deck in that Category (y-axis)</h3>
+  <button onclick="location.href='/';">Return to Dashboard</button>
+
+  <div class="py-3 px-5 bg-gray-50"></div>
   <canvas class="p-10" id="chartBar"></canvas>
 
   {% for dataPoint in data %}
@@ -37,11 +41,12 @@
     "$2.00 - $4.99",
     "$5.00 +",
   ];
+
   const dataBarChart = {
     labels: labelsBarChart,
     datasets: [
       {
-        label: "Expense Chart",
+        label: "Amount of Cards in Deck in that Category",
         data: getData()
       },
     ],

@@ -272,6 +272,10 @@
     color: white;
   }
 
+  #pDecklistName:hover {
+    cursor: pointer;
+  }
+
 </style>
 {% endblock %}
 
@@ -345,7 +349,7 @@
   <ul>
     {% for card in deckCards %}
       <div id="decklist">
-        <li onclick="location.href='/previewOnly/{{ card.name }}';">{{ card.name }}</li>
+        <li onclick="location.href='/previewOnly/{{ card.name }}';" id="pDecklistName">{{ card.name }}</li>
         <p onclick="location.href='/removingcard/{{ card.name }}';" id="pDecklist">✕</p>
       </div>
     {% endfor %}

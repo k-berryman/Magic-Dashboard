@@ -603,3 +603,6 @@ deck_card = Deck(name="Aesi", user_id=1, card_id=1)
 db.session.add(deck_card)
 db.session.commit()
 ```
+
+# Adding Graphs
+Tailwind CSS

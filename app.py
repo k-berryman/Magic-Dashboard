@@ -301,7 +301,13 @@ def previewOnly(cardname):
 
 @app.route('/expenseChart', methods=["GET", "POST"])
 def expenseChart():
-    data=[]
+
+    cat1Sum = 0   # $0 - $0.49
+    cat2Sum = 0   # $0.50 - $0.74
+    cat3Sum = 0   # $0.75 - $0.99
+    cat4Sum = 0   # $1.00 - $1.99
+    cat5Sum = 0   # $2.00 - $4.99
+    cat6Sum = 0   # $5.00 +
 
     # Get deck cards
     deckName = session['sessionDeckName']
@@ -309,11 +315,77 @@ def expenseChart():
     deckCards = Card.query.filter_by(deck_id = commander.deck_id).all()
 
     for card in deckCards:
-        data.append(card.price)
+        print("---- ", card.price, " ---")
+        if card.price < .49:
+            cat1Sum = cat1Sum + 1
+
+        elif card.price >= .5 and card.price <= .74:
+            cat2Sum = cat2Sum + 1
+
+        elif card.price >= .75 and card.price <= 0.99:
+            cat3Sum = cat3Sum + 1
+
+        elif card.price >= 1 and card.price <= 1.99:
+            cat4Sum = cat4Sum + 1
+
+        elif card.price >= 2 and card.price <= 4.99:
+            cat5Sum = cat5Sum + 1
+
+        else:
+            cat6Sum = cat6Sum + 1
+
+    data = [cat1Sum, cat2Sum, cat3Sum, cat4Sum, cat5Sum, cat6Sum]
 
     return render_template('expenseChart.html', data=data)
 
 
 @app.route('/manaCurveChart', methods=["GET", "POST"])
 def manaCurveChart():
-    return render_template('manaCurveChart.html')
+
+    cat1Sum = 0   # 0 cards
+    cat2Sum = 0   # 1 card
+    cat3Sum = 0   # 2 cards
+    cat4Sum = 0   # 3 cards
+    cat5Sum = 0   # 4 cards
+    cat6Sum = 0   # 5 cards
+    cat7Sum = 0   # 6 cards
+    cat8Sum = 0   # 7 cards
+    cat9Sum = 0   # 8 cards
+
+    # Get deck cards
+    deckName = session['sessionDeckName']
+    commander = Card.query.filter_by(name=deckName).first()
+    deckCards = Card.query.filter_by(deck_id = commander.deck_id).all()
+
+    for card in deckCards:
+        print("---- ", card.cmc, " ---")
+        if card.cmc == 0:
+            cat1Sum = cat1Sum + 1
+
+        elif card.cmc == 1:
+            cat2Sum = cat2Sum + 1
+
+        elif card.cmc == 2:
+            cat3Sum = cat3Sum + 1
+
+        elif card.cmc == 3:
+            cat4Sum = cat4Sum + 1
+
+        elif card.cmc == 4:
+            cat5Sum = cat5Sum + 1
+
+        elif card.cmc == 5:
+            cat6Sum = cat6Sum + 1
+
+        elif card.cmc == 6:
+            cat7Sum = cat7Sum + 1
+
+        elif card.cmc == 7:
+            cat8Sum = cat8Sum + 1
+
+        else:
+            cat9Sum = cat9Sum + 1
+
+    data = [cat1Sum, cat2Sum, cat3Sum, cat4Sum, cat5Sum, cat6Sum, cat7Sum, cat8Sum, cat9Sum]
+
+    return render_template('manaCurveChart.html', data=data)
