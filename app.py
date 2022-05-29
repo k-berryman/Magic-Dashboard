@@ -136,7 +136,15 @@ def dashboard(username, cardToNamePreview):
 
         usersDecks = Deck.query.all();
 
-        return render_template("dashboard.html", form=form, user=user, pic=pic, deckCards=deckCards, usersDecks=usersDecks, deckName=deckName)
+        # Make recommended cards
+        pic1 = requests.get("https://api.scryfall.com/cards/random").json()["image_uris"]["normal"]
+        pic2 = requests.get("https://api.scryfall.com/cards/random").json()["image_uris"]["normal"]
+        pic3 = requests.get("https://api.scryfall.com/cards/random").json()["image_uris"]["normal"]
+        pic4 = requests.get("https://api.scryfall.com/cards/random").json()["image_uris"]["normal"]
+        pic5 = requests.get("https://api.scryfall.com/cards/random").json()["image_uris"]["normal"]
+
+        return render_template("dashboard.html", form=form, user=user, pic=pic, deckCards=deckCards,
+            usersDecks=usersDecks, deckName=deckName, rec1=pic1, rec2=pic2, rec3=pic3, rec4=pic4, rec5=pic5)
     except:
         return redirect('/error404')
 
@@ -294,10 +302,10 @@ def previewOnly(cardname):
     return redirect(f'/dashboard/{user.username}/{card.name}')
 
 
-
 @app.route('/expenseChart', methods=["GET", "POST"])
 def expenseChart():
-    return render_template('expenseChart.html')
+    data=[.3,2,7]
+    return render_template('expenseChart.html', data=data)
 
 
 @app.route('/manaCurveChart', methods=["GET", "POST"])
